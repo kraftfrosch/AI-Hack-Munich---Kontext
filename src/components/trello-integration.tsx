@@ -27,7 +27,7 @@ export function TrelloIntegration({
 	};
 
 	return (
-		<div className="w-full max-w-4xl mx-auto" data-board-text={trelloBoardText}>
+		<div className="w-full" data-board-text={trelloBoardText}>
 			<TrelloButton
 				isConnected={trelloConnected}
 				loading={trelloLoading}
