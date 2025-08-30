@@ -5,7 +5,7 @@ import { useCallback, useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Mic, User, Bot, Send, Check, Phone } from "lucide-react";
+import { Mic, User, Bot, Send, Phone, Paperclip } from "lucide-react";
 
 interface Message {
   message: string;
@@ -27,6 +27,7 @@ export function Conversation({
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
+  const [attachment, setAttachment] = useState<File | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -163,6 +164,19 @@ export function Conversation({
     },
     [handleSendMessage]
   );
+
+  const handleAttachmentClick = useCallback(() => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "*/*";
+    input.onchange = (e) => {
+      const target = e.target as HTMLInputElement;
+      if (target.files && target.files[0]) {
+        setAttachment(target.files[0]);
+      }
+    };
+    input.click();
+  }, []);
 
   return (
     <div className="h-full flex flex-col">
@@ -316,6 +330,25 @@ export function Conversation({
 
           {/* Chat Input */}
           <div className="flex gap-2">
+            <div className="relative group">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleAttachmentClick}
+                className="px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg border-gray-300 relative"
+              >
+                <Paperclip className="w-4 h-4" />
+                {attachment && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+                )}
+              </Button>
+              {attachment && (
+                <div className="absolute left-0 bottom-full mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  {attachment.name}
+                  <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                </div>
+              )}
+            </div>
             <Input
               type="text"
               value={inputMessage}
