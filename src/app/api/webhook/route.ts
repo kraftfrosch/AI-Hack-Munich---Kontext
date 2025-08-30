@@ -3,7 +3,7 @@ export async function POST(req: Request) {
     console.log("Webhook received");
 
     // Send message to Discord
-    await fetch("http://localhost:3000/api/discord", {
+    await fetch("https://ai-hack-munich-kontext-5moe.vercel.app/api/discord", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
