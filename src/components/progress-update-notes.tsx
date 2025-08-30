@@ -27,7 +27,6 @@ export function ProgressUpdateNotes({
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(progressUpdate.content);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isSendingDiscordMessage, setIsSendingDiscordMessage] = useState(false);
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat("en-US", {
       weekday: "long",
@@ -94,13 +93,12 @@ export function ProgressUpdateNotes({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileText className="w-5 h-5" />
-          Progress Update
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="w-5 h-5" />
+            Progress Update
+          </CardTitle>
+          <div className="flex-1" />
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Calendar className="w-3 h-3" />
             <span>Week of {formatDate(progressUpdate.weekOf)}</span>
@@ -112,7 +110,10 @@ export function ProgressUpdateNotes({
               <ListRestart className="w-3 h-3" />
             </Button>
           </div>
-
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-3">
           <div className="space-y-3">
             {isEditing ? (
               <>
