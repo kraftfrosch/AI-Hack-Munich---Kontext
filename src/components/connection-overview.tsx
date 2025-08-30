@@ -1,26 +1,21 @@
 import { KontextConnectionStatus } from "./kontext-connect-button";
 import { TrelloButton } from "./trello-button";
+import { TrelloIntegration } from "./trello-integration";
 import { Card } from "./ui/card";
 
 export function ConnectionOverview({
-	trelloConnected,
-	trelloLoading,
-	connectTrello,
-	disconnectTrello,
+	trelloBoardText,
+	setTrelloBoardText,
 }: {
-	trelloConnected: boolean;
-	trelloLoading: boolean;
-	connectTrello: () => void;
-	disconnectTrello: () => void;
+	trelloBoardText: string;
+	setTrelloBoardText: (text: string) => void;
 }) {
 	return (
 		<Card className="flex flex-col gap-2">
 			<KontextConnectionStatus />
-			<TrelloButton
-				isConnected={trelloConnected}
-				loading={trelloLoading}
-				onConnect={connectTrello}
-				onDisconnect={disconnectTrello}
+			<TrelloIntegration
+				trelloBoardText={trelloBoardText}
+				setTrelloBoardText={setTrelloBoardText}
 			/>
 		</Card>
 	);

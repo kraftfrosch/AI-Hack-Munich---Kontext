@@ -18,6 +18,7 @@ export default function Review() {
 		content:
 			"# Achivement\n- closed EU client Superscale.ai for 500k\n\n# Blockers\n- we need legal approval for deployment",
 	});
+	const [trelloBoardText, setTrelloBoardText] = useState("");
 
 	const handleGetProgressUpdate = (): ProgressUpdate => {
 		return progressUpdate;
@@ -37,10 +38,15 @@ export default function Review() {
 					Review Progress Update
 				</h1>
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl mx-auto place-items-center">
-					<div className="w-full">
+					<div className="w-full flex flex-col gap-4">
 						<ProgressUpdateNotes
 							progressUpdate={progressUpdate}
 							onUpdate={handleUpdateProgressUpdate}
+							trelloContext={trelloBoardText}
+						/>
+						<ConnectionOverview
+							trelloBoardText={trelloBoardText}
+							setTrelloBoardText={setTrelloBoardText}
 						/>
 					</div>
 					<div className="w-full">
@@ -50,7 +56,6 @@ export default function Review() {
 						/>
 					</div>
 				</div>
-				<TrelloIntegration />
 			</div>
 		</main>
 	);
