@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { TrelloButton } from "@/components/trello-button";
+import { TrelloBoardText } from "@/components/trello-board-text";
 import { Conversation } from "@/components/progress-conversation";
 import {
   ProgressUpdateNotes,
@@ -14,6 +16,32 @@ export default function Review() {
     content:
       "# Achivement\n- closed EU client Superscale.ai for 500k\n\n# Blockers\n- we need legal approval for deployment",
   });
+
+  const [trelloConnected, setTrelloConnected] = useState(false);
+  const [trelloLoading, setTrelloLoading] = useState(false);
+  const [trelloBoardText, setTrelloBoardText] = useState("");
+  const defaultBoardId = "68b2d261fd8b6b2f72c7167d";
+
+  const connectTrello = async () => {
+    try {
+      setTrelloLoading(true);
+      const r = await fetch(`/api/trello/board?boardId=${defaultBoardId}`, { cache: "no-store" });
+      const text = await r.text();
+      if (!r.ok) throw new Error(text);
+      setTrelloBoardText(text);
+      setTrelloConnected(true);
+    } catch (e: any) {
+      setTrelloBoardText(`Error: ${e?.message || e}`);
+      setTrelloConnected(false);
+    } finally {
+      setTrelloLoading(false);
+    }
+  };
+
+  const disconnectTrello = () => {
+    setTrelloConnected(false);
+    setTrelloBoardText("");
+  };
 
   const handleGetProgressUpdate = (): ProgressUpdate => {
     return progressUpdate;
@@ -45,6 +73,23 @@ export default function Review() {
               updateProgressUpdateTool={handleUpdateProgressUpdate}
             />
           </div>
+        </div>
+        <div className="mt-12 w-full max-w-4xl mx-auto">
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <TrelloButton
+              isConnected={trelloConnected}
+              loading={trelloLoading}
+              onConnect={connectTrello}
+              onDisconnect={disconnectTrello}
+            />
+            <span className="text-xs text-gray-500">Board ID: {defaultBoardId}</span>
+          </div>
+          <TrelloBoardText
+            value={trelloBoardText}
+            onChange={setTrelloBoardText}
+            placeholder="Trello board JSON/text will appear here after connecting…"
+            rows={12}
+          />
         </div>
       </div>
     </main>
