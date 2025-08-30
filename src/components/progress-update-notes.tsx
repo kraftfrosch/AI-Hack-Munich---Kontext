@@ -4,7 +4,6 @@ import { useKontext } from "@kontext.dev/kontext-sdk/react";
 import { Calendar, Edit3, FileText } from "lucide-react";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { KontextConnectionStatus } from "./kontext-connect-button";
 import { Button } from "./ui/button";
 
 export interface ProgressUpdate {

@@ -43,24 +43,16 @@ export function TrelloIntegration({
 	};
 
 	return (
-		<div className="mt-12 w-full max-w-4xl mx-auto">
-			<div className="flex items-center justify-between gap-4 mb-4">
-				<TrelloButton
-					isConnected={trelloConnected}
-					loading={trelloLoading}
-					onConnect={connectTrello}
-					onDisconnect={disconnectTrello}
-				/>
-				<span className="text-xs text-gray-500">
-					Board ID: {defaultBoardId}
-				</span>
-			</div>
-			<TrelloBoardText
-				value={trelloBoardText}
-				onChange={setTrelloBoardText}
-				placeholder="Trello board JSON/text will appear here after connecting…"
-				rows={12}
+		<div className="w-full max-w-4xl mx-auto">
+			<TrelloButton
+				isConnected={trelloConnected}
+				loading={trelloLoading}
+				onConnect={connectTrello}
+				onDisconnect={disconnectTrello}
 			/>
+			{/*<span className="text-xs text-gray-500">
+					Board ID: {defaultBoardId}
+				</span>*/}
 		</div>
 	);
 }
