@@ -2,14 +2,15 @@ export async function POST(req: Request) {
 
     console.log("Webhook received");
 
+    const message = "Start your weekly project report: https://ai-hack-munich-kontext-5moe.vercel.app/update/review";
     // Send message to Discord
     await fetch("https://ai-hack-munich-kontext-5moe.vercel.app/api/discord", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ "message": "Start your weekly project report: https://ai-hack-munich-kontext-5moe.vercel.app/update/review" }),
+        body: JSON.stringify({ "message": message }),
     });
 
-    return Response.json({ message: "Webhook received" });
+    return Response.json({ message: message });
 }
