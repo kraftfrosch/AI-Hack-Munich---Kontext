@@ -23,12 +23,12 @@ export function Conversation({
   updateProgressUpdateTool,
 }: ConversationProps) {
   const [audioPermission, setAudioPermission] = useState(false);
-  const [videoPermission, setVideoPermission] = useState(false);
-  const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
+  // const [videoPermission, setVideoPermission] = useState(false);
+  // const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [attachment, setAttachment] = useState<File | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  // const videoRef = useRef<HTMLVideoElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const conversation = useConversation({
@@ -56,20 +56,20 @@ export function Conversation({
   }, [messages]);
 
   // Update video element when stream changes
-  useEffect(() => {
-    if (videoRef.current && videoStream) {
-      videoRef.current.srcObject = videoStream;
-    }
-  }, [videoStream]);
+  // useEffect(() => {
+  //   if (videoRef.current && videoStream) {
+  //     videoRef.current.srcObject = videoStream;
+  //   }
+  // }, [videoStream]);
 
   // Cleanup video stream on unmount
-  useEffect(() => {
-    return () => {
-      if (videoStream) {
-        videoStream.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, [videoStream]);
+  // useEffect(() => {
+  //   return () => {
+  //     if (videoStream) {
+  //       videoStream.getTracks().forEach((track) => track.stop());
+  //     }
+  //   };
+  // }, [videoStream]);
 
   const requestPermissions = useCallback(async () => {
     try {
@@ -81,11 +81,11 @@ export function Conversation({
       audioStream.getTracks().forEach((track) => track.stop());
 
       // Request video permission and keep the stream active
-      const videoStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-      });
-      setVideoPermission(true);
-      setVideoStream(videoStream);
+      // const videoStream = await navigator.mediaDevices.getUserMedia({
+      //   video: true,
+      // });
+      // setVideoPermission(true);
+      // setVideoStream(videoStream);
 
       return true;
     } catch (error) {
@@ -181,7 +181,7 @@ export function Conversation({
   return (
     <div className="h-full flex flex-col">
       <div className="space-y-4 h-full flex flex-col">
-        {/* Status Header */}
+        {/* Status Header - Commented out to remove video permissions */}
         {/* <div className="space-y-3 border-b pb-4">
           <h3 className="text-md font-semibold text-center">
             Edit your progress update via chat
@@ -264,7 +264,7 @@ export function Conversation({
                     conversation.status === "connecting"
                   }
                   className={`w-16 h-16 rounded-full p-0 ${
-                    audioPermission && videoPermission
+                    audioPermission // && videoPermission
                       ? "bg-blue-500 hover:bg-blue-600"
                       : "bg-gray-400 hover:bg-gray-500"
                   }`}
@@ -274,7 +274,7 @@ export function Conversation({
                 <p className="text-sm text-gray-500 mt-3 text-center">
                   {conversation.status === "connecting"
                     ? "Connecting..."
-                    : audioPermission && videoPermission
+                    : audioPermission // && videoPermission
                     ? "Click to start conversation"
                     : "Click to enable permissions and start conversation"}
                 </p>
