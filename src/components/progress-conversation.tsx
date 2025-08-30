@@ -5,7 +5,13 @@ import { useCallback, useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Mic, Video } from "lucide-react";
+import { Check, Mic, Video, User, Bot } from "lucide-react";
+
+interface Message {
+  message: string;
+  source: "user" | "ai";
+  timestamp: Date;
+}
 
 interface ConversationProps {
   getProgressUpdateTool: () => { content: string };
@@ -19,12 +25,25 @@ export function Conversation({
   const [audioPermission, setAudioPermission] = useState(false);
   const [videoPermission, setVideoPermission] = useState(false);
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const conversation = useConversation({
     onConnect: () => console.log("Connected"),
     onDisconnect: () => console.log("Disconnected"),
-    onMessage: (message) => console.log("Message:", message),
+    onMessage: (message) => {
+      console.log("Message:", message);
+      // Add AI message to the conversation
+      setMessages((prev) => [
+        ...prev,
+        {
+          message: message.message ?? "AI message received",
+          source: message.source ?? "ai",
+          timestamp: new Date(),
+        },
+      ]);
+    },
     onError: (error) => console.error("Error:", error),
     onAudio: (audioEvent) => console.log("Audio event:", audioEvent),
   });
@@ -67,6 +86,11 @@ export function Conversation({
       }
     };
   }, [videoStream]);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const startConversation = useCallback(async () => {
     try {
@@ -218,6 +242,48 @@ export function Conversation({
             >
               {conversation.isSpeaking ? "speaking" : "listening"}
             </Badge>
+          </div>
+        </div>
+
+        {/* Conversation Messages */}
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium">Conversation</h3>
+          <div className="max-h-64 overflow-y-auto space-y-3 border rounded-lg p-3 bg-gray-50">
+            {messages.length === 0 ? (
+              <p className="text-sm text-gray-500 text-center py-4">
+                Start a conversation to see messages here
+              </p>
+            ) : (
+              messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={`flex items-start gap-2 ${
+                    msg.source === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  {msg.source === "ai" && (
+                    <div className="flex-shrink-0 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                      <Bot className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                  <div
+                    className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
+                      msg.source === "user"
+                        ? "bg-blue-500 text-white ml-auto"
+                        : "bg-white text-gray-800 border"
+                    }`}
+                  >
+                    {msg.message}
+                  </div>
+                  {msg.source === "user" && (
+                    <div className="flex-shrink-0 w-6 h-6 bg-gray-500 rounded-full flex items-center justify-center">
+                      <User className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+            <div ref={messagesEndRef} />
           </div>
         </div>
       </CardContent>
