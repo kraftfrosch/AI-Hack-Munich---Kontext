@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ConnectionOverview } from "@/components/connection-overview";
 import { Conversation } from "@/components/progress-conversation";
 import {
@@ -16,6 +16,9 @@ export default function Review() {
 			"# Achivement\n- closed EU client Superscale.ai for 500k\n\n# Blockers\n- we need legal approval for deployment",
 	});
 	const [trelloBoardText, setTrelloBoardText] = useState("");
+	const [trelloConnected, setTrelloConnected] = useState(false);
+	const [trelloLoading, setTrelloLoading] = useState(false);
+	const defaultBoardId = "68b2d261fd8b6b2f72c7167d";
 
 	const handleGetProgressUpdate = (): ProgressUpdate => {
 		return progressUpdate;
@@ -27,6 +30,30 @@ export default function Review() {
 			content,
 		}));
 	};
+
+	const connectTrello = useCallback(async () => {
+		try {
+			setTrelloLoading(true);
+			const r = await fetch(`/api/trello/board?boardId=${defaultBoardId}`, {
+				cache: "no-store",
+			});
+			const text = await r.text();
+			if (!r.ok) throw new Error(text);
+			setTrelloBoardText(text);
+			setTrelloConnected(true);
+		} catch (e: unknown) {
+			const errorMessage = e instanceof Error ? e.message : String(e);
+			setTrelloBoardText(`Error: ${errorMessage}`);
+			setTrelloConnected(false);
+		} finally {
+			setTrelloLoading(false);
+		}
+	}, []);
+
+	// Auto-connect to Trello on page load
+	useEffect(() => {
+		connectTrello();
+	}, [connectTrello]);
 
 	return (
 		<main className="flex h-screen w-full flex-col">
@@ -49,6 +76,10 @@ export default function Review() {
 						<ConnectionOverview
 							trelloBoardText={trelloBoardText}
 							setTrelloBoardText={setTrelloBoardText}
+							trelloConnected={trelloConnected}
+							setTrelloConnected={setTrelloConnected}
+							connectTrello={connectTrello}
+							trelloLoading={trelloLoading}
 						/>
 					</div>
 				</div>

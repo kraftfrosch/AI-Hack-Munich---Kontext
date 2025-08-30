@@ -27,7 +27,29 @@ export async function POST(req: Request) {
     const { text } = await generateText({
         model: openai("gpt-4o"),
         system: combinedContext || "You are a helpful assistant that helps users with their calendar and meeting information.",
-        prompt: "List all meetings of last week",
+        prompt: `
+        You are a helpful assitant that creates a progress update for a given week.
+        The progress update should be in markdown format.
+        The progress update should be in the following format:
+        # Progress Update
+        ## Achivements
+        ## Blockers
+        ## Next Week's Goals
+        ## Meetings
+
+        You get the context of the users email and trello board.
+
+        Example: 
+        # Progress Update
+        ## Achivements
+        - Closed EU client Superscale.ai for 500k
+        ## Blockers
+        - We need legal approval for deployment
+        ## Next Week's Goals
+        - Get legal approval for deployment
+        ## Meetings
+        - Meeting with the EU client Superscale.ai on 2025-08-30
+        `,
     });
 
     return Response.json({ response: text });

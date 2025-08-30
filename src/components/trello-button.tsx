@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 
 type TrelloButtonProps = {

@@ -1,49 +1,33 @@
 "use client";
 
-import { useState } from "react";
-import { TrelloBoardText } from "./trello-board-text";
+import React from "react";
 import { TrelloButton } from "./trello-button";
 
 type TrelloIntegrationProps = {
 	defaultBoardId?: string;
 	trelloBoardText: string;
 	setTrelloBoardText: (text: string) => void;
+	trelloConnected: boolean;
+	setTrelloConnected: (connected: boolean) => void;
+	connectTrello: () => Promise<void>;
+	trelloLoading: boolean;
 };
 
 export function TrelloIntegration({
-	defaultBoardId = "68b2d261fd8b6b2f72c7167d",
-	trelloBoardText = "",
+	trelloBoardText, // Used by parent component to track current board text
 	setTrelloBoardText,
+	trelloConnected,
+	setTrelloConnected,
+	connectTrello,
+	trelloLoading,
 }: TrelloIntegrationProps) {
-	const [trelloConnected, setTrelloConnected] = useState(false);
-	const [trelloLoading, setTrelloLoading] = useState(false);
-
-	const connectTrello = async () => {
-		try {
-			setTrelloLoading(true);
-			const r = await fetch(`/api/trello/board?boardId=${defaultBoardId}`, {
-				cache: "no-store",
-			});
-			const text = await r.text();
-			if (!r.ok) throw new Error(text);
-			setTrelloBoardText(text);
-			setTrelloConnected(true);
-		} catch (e: unknown) {
-			const errorMessage = e instanceof Error ? e.message : String(e);
-			setTrelloBoardText(`Error: ${errorMessage}`);
-			setTrelloConnected(false);
-		} finally {
-			setTrelloLoading(false);
-		}
-	};
-
 	const disconnectTrello = () => {
 		setTrelloConnected(false);
 		setTrelloBoardText("");
 	};
 
 	return (
-		<div className="w-full max-w-4xl mx-auto">
+		<div className="w-full max-w-4xl mx-auto" data-board-text={trelloBoardText}>
 			<TrelloButton
 				isConnected={trelloConnected}
 				loading={trelloLoading}
