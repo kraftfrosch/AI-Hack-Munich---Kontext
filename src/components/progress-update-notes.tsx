@@ -48,18 +48,25 @@ export function ProgressUpdateNotes({
 	};
 
 	const sendDiscordMessage = async () => {
-		const response = await fetch("/api/discord", {
-			method: "POST",
-			body: JSON.stringify({
-				message: editContent,
-			}),
-		});
+		try {
+			const response = await fetch("/api/discord", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					message: editContent,
+				}),
+			});
 
-		if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			const data = await response.json();
+			console.log("Discord message sent:", data.messageId);
+		} catch (error) {
+			console.error("Error sending Discord message:", error);
 		}
-		const data = await response.json();
-		console.log("Discord message sent:", data.messageId);
 	};
 
 	const { systemPrompt } = useKontext();
