@@ -3,10 +3,9 @@
 import { useConversation } from "@elevenlabs/react";
 import { useCallback, useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Mic, User, Bot, Send, Check, Phone } from "lucide-react";
+import { Mic, User, Bot, Send, Phone, Paperclip } from "lucide-react";
 
 interface Message {
   message: string;
@@ -28,6 +27,7 @@ export function Conversation({
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
+  const [attachment, setAttachment] = useState<File | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -165,18 +165,18 @@ export function Conversation({
     [handleSendMessage]
   );
 
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case "connected":
-        return "default";
-      case "connecting":
-        return "secondary";
-      case "disconnected":
-        return "outline";
-      default:
-        return "outline";
-    }
-  };
+  const handleAttachmentClick = useCallback(() => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "*/*";
+    input.onchange = (e) => {
+      const target = e.target as HTMLInputElement;
+      if (target.files && target.files[0]) {
+        setAttachment(target.files[0]);
+      }
+    };
+    input.click();
+  }, []);
 
   return (
     <div className="h-full flex flex-col">
@@ -211,41 +211,50 @@ export function Conversation({
         </div> */}
 
         {/* Conversation Messages */}
-        <div className="space-y-2 flex-1 flex flex-col">
+        <div className="space-y-2 flex-1 flex flex-col min-h-0">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium">
               Edit your progress update via chat
             </h3>
-            <Badge
-              variant={conversation.isSpeaking ? "default" : "secondary"}
-              className="flex items-center gap-2"
-            >
-              {conversation.isSpeaking ? (
-                <>
-                  <div className="flex items-center gap-1">
-                    <div className="w-1 h-3 bg-current rounded-full animate-pulse"></div>
-                    <div
-                      className="w-1 h-3 bg-current rounded-full animate-pulse"
-                      style={{ animationDelay: "0.1s" }}
-                    ></div>
-                    <div
-                      className="w-1 h-3 bg-current rounded-full animate-pulse"
-                      style={{ animationDelay: "0.2s" }}
-                    ></div>
-                  </div>
-                  <span>Speaking</span>
-                </>
-              ) : conversation.status === "connected" ? (
-                <>
-                  <Mic className="w-3 h-3" />
-                  <span>Listening</span>
-                </>
-              ) : (
-                <></>
-              )}
-            </Badge>
+            {conversation.status !== "connected" ? (
+              <Badge
+                variant="outline"
+                className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 transition-colors"
+                onClick={startConversation}
+              >
+                <Phone className="w-3 h-3" />
+                <span>Start Conversation</span>
+              </Badge>
+            ) : (
+              <Badge
+                variant={conversation.isSpeaking ? "default" : "secondary"}
+                className="flex items-center gap-2"
+              >
+                {conversation.isSpeaking ? (
+                  <>
+                    <div className="flex items-center gap-1">
+                      <div className="w-1 h-3 bg-current rounded-full animate-pulse"></div>
+                      <div
+                        className="w-1 h-3 bg-current rounded-full animate-pulse"
+                        style={{ animationDelay: "0.1s" }}
+                      ></div>
+                      <div
+                        className="w-1 h-3 bg-current rounded-full animate-pulse"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                    </div>
+                    <span>Speaking</span>
+                  </>
+                ) : (
+                  <>
+                    <Mic className="w-3 h-3" />
+                    <span>Listening</span>
+                  </>
+                )}
+              </Badge>
+            )}
           </div>
-          <div className="flex-1 border rounded-lg p-3 bg-gray-50 relative min-h-0">
+          <div className="flex-1 border rounded-lg p-3 bg-gray-50 relative min-h-0 overflow-hidden">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full min-h-56">
                 <Button
@@ -321,6 +330,25 @@ export function Conversation({
 
           {/* Chat Input */}
           <div className="flex gap-2">
+            <div className="relative group">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleAttachmentClick}
+                className="px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg border-gray-300 relative"
+              >
+                <Paperclip className="w-4 h-4" />
+                {attachment && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+                )}
+              </Button>
+              {attachment && (
+                <div className="absolute left-0 bottom-full mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded whitespace-nowrap z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  {attachment.name}
+                  <div className="absolute top-full left-2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+                </div>
+              )}
+            </div>
             <Input
               type="text"
               value={inputMessage}

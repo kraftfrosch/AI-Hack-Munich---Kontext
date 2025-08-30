@@ -1,7 +1,7 @@
 "use client";
 
 import { useKontext } from "@kontext.dev/kontext-sdk/react";
-import { Calendar, Edit3, FileText, ListRestart } from "lucide-react";
+import { Calendar, FileText, ListRestart } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AnimatedMarkdownBox } from "./animated-markdown-box";
