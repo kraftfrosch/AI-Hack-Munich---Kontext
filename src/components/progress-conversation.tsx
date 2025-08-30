@@ -164,19 +164,6 @@ export function Conversation({
     [handleSendMessage]
   );
 
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case "connected":
-        return "default";
-      case "connecting":
-        return "secondary";
-      case "disconnected":
-        return "outline";
-      default:
-        return "outline";
-    }
-  };
-
   return (
     <div className="h-full flex flex-col">
       <div className="space-y-4 h-full flex flex-col">
@@ -215,34 +202,43 @@ export function Conversation({
             <h3 className="text-sm font-medium">
               Edit your progress update via chat
             </h3>
-            <Badge
-              variant={conversation.isSpeaking ? "default" : "secondary"}
-              className="flex items-center gap-2"
-            >
-              {conversation.isSpeaking ? (
-                <>
-                  <div className="flex items-center gap-1">
-                    <div className="w-1 h-3 bg-current rounded-full animate-pulse"></div>
-                    <div
-                      className="w-1 h-3 bg-current rounded-full animate-pulse"
-                      style={{ animationDelay: "0.1s" }}
-                    ></div>
-                    <div
-                      className="w-1 h-3 bg-current rounded-full animate-pulse"
-                      style={{ animationDelay: "0.2s" }}
-                    ></div>
-                  </div>
-                  <span>Speaking</span>
-                </>
-              ) : conversation.status === "connected" ? (
-                <>
-                  <Mic className="w-3 h-3" />
-                  <span>Listening</span>
-                </>
-              ) : (
-                <></>
-              )}
-            </Badge>
+            {conversation.status !== "connected" ? (
+              <Badge
+                variant="outline"
+                className="flex items-center gap-2 cursor-pointer hover:bg-gray-100 transition-colors"
+                onClick={startConversation}
+              >
+                <Phone className="w-3 h-3" />
+                <span>Start Conversation</span>
+              </Badge>
+            ) : (
+              <Badge
+                variant={conversation.isSpeaking ? "default" : "secondary"}
+                className="flex items-center gap-2"
+              >
+                {conversation.isSpeaking ? (
+                  <>
+                    <div className="flex items-center gap-1">
+                      <div className="w-1 h-3 bg-current rounded-full animate-pulse"></div>
+                      <div
+                        className="w-1 h-3 bg-current rounded-full animate-pulse"
+                        style={{ animationDelay: "0.1s" }}
+                      ></div>
+                      <div
+                        className="w-1 h-3 bg-current rounded-full animate-pulse"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                    </div>
+                    <span>Speaking</span>
+                  </>
+                ) : (
+                  <>
+                    <Mic className="w-3 h-3" />
+                    <span>Listening</span>
+                  </>
+                )}
+              </Badge>
+            )}
           </div>
           <div className="flex-1 border rounded-lg p-3 bg-gray-50 relative min-h-0 overflow-hidden">
             {messages.length === 0 ? (
