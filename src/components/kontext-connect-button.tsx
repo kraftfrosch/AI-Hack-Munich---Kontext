@@ -50,9 +50,21 @@ export function KontextConnectionStatus() {
 	}
 
 	return (
-		<div className="flex flex-col gap-2 px-3 py-2">
-			<p className="text-sm text-muted-foreground">Connect Gmail</p>
-			<KontextConnectButton variant="default" size="default" />
+		<div className="flex items-center gap-2 px-3 py-2 justify-between">
+			<div className="flex items-center gap-2">
+				<div className="h-4 w-4 bg-gray-300 rounded-full"></div>
+				<span className="text-sm text-muted-foreground">
+					Gmail not connected
+				</span>
+			</div>
+			<Button
+				onClick={connectGmail}
+				variant="outline"
+				size="sm"
+				disabled={!!isLoading}
+			>
+				{isLoading ? "Working…" : "Connect"}
+			</Button>
 		</div>
 	);
 }
