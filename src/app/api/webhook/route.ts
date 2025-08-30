@@ -2,7 +2,7 @@ export async function POST(req: Request) {
 
     const json = await req.json();
     if (json["type"] === 0) {
-        return Response.json({ message: "Webhook received" }, { status: 204 })
+        return Response.json({ status: 204 })
     }
 
 
