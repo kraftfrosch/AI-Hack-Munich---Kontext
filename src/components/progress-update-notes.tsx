@@ -1,7 +1,7 @@
 "use client";
 
 import { useKontext } from "@kontext.dev/kontext-sdk/react";
-import { Calendar, Edit3, FileText } from "lucide-react";
+import { Calendar, FileText } from "lucide-react";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "./ui/button";
