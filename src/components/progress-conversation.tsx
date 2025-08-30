@@ -309,6 +309,27 @@ export function Conversation({
                     )}
                   </div>
                 ))}
+                {conversation.status === "connected" &&
+                  !conversation.isSpeaking && (
+                    <div className="flex items-center justify-end space-x-1">
+                      <div className="flex items-end space-x-0.5 h-4">
+                        {[...Array(5)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="w-0.5 bg-blue-500 rounded-full"
+                            style={{
+                              height: `${Math.random() * 12 + 4}px`,
+                              animation: `soundWave 1.2s ease-in-out infinite`,
+                              animationDelay: `${i * 0.15}s`,
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-sm text-gray-500 ml-2">
+                        Listening...
+                      </span>
+                    </div>
+                  )}
                 <div ref={messagesEndRef} />
               </div>
             )}
