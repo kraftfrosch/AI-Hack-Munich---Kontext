@@ -11,7 +11,8 @@ export default function Review() {
   const [progressUpdate, setProgressUpdate] = useState<ProgressUpdate>({
     id: "1",
     weekOf: new Date(),
-    content: "",
+    content:
+      "# Achivement\n- closed EU client Superscale.ai for 500k\n\n# Blockers\n- we need legal approval for deployment",
   });
 
   const handleGetProgressUpdate = (): ProgressUpdate => {
