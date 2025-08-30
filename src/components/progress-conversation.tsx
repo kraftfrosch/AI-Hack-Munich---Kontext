@@ -179,8 +179,8 @@ export function Conversation({
   };
 
   return (
-    <Card className="w-full">
-      <CardContent className="space-y-4">
+    <div className="h-full flex flex-col">
+      <div className="space-y-4 h-full flex flex-col">
         {/* Status Header */}
         {/* <div className="space-y-3 border-b pb-4">
           <h3 className="text-md font-semibold text-center">
@@ -211,7 +211,7 @@ export function Conversation({
         </div> */}
 
         {/* Conversation Messages */}
-        <div className="space-y-2">
+        <div className="space-y-2 flex-1 flex flex-col">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium">
               Edit your progress update via chat
@@ -245,7 +245,7 @@ export function Conversation({
               )}
             </Badge>
           </div>
-          <div className="min-h-64 border rounded-lg p-3 bg-gray-50 relative">
+          <div className="flex-1 border rounded-lg p-3 bg-gray-50 relative min-h-0">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full min-h-56">
                 <Button
@@ -271,7 +271,7 @@ export function Conversation({
                 </p>
               </div>
             ) : (
-              <div className="space-y-3 max-h-56 overflow-y-auto">
+              <div className="space-y-3 h-full overflow-y-auto">
                 {messages.map((msg, index) => (
                   <div
                     key={index}
@@ -339,7 +339,7 @@ export function Conversation({
             </Button>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
