@@ -48,7 +48,7 @@ export function TrelloButton({
 	}
 
 	return (
-		<div className="flex items-center gap-2 px-3 py-2 justify-between">
+		<div className="flex items-center gap-2 px-3 py-2 justify-between w-full">
 			<div className="flex items-center gap-2">
 				<div className="h-4 w-4 bg-gray-300 rounded-full"></div>
 				<span className="text-sm text-muted-foreground">
