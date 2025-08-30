@@ -120,6 +120,10 @@ export function ProgressUpdateNotes({
 					</CardTitle>
 					<div className="flex-1" />
 					<div className="flex items-center gap-2 text-xs text-muted-foreground">
+						<Button
+							onClick={sendInitialDiscordMessage}
+							variant="ghost"
+						></Button>
 						<Calendar className="w-3 h-3" />
 						<span>Week of {formatDate(progressUpdate.weekOf)}</span>
 						<Button
