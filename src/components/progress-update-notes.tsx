@@ -120,10 +120,6 @@ export function ProgressUpdateNotes({
 					</CardTitle>
 					<div className="flex-1" />
 					<div className="flex items-center gap-2 text-xs text-muted-foreground">
-						<Button
-							onClick={sendInitialDiscordMessage}
-							variant="ghost"
-						></Button>
 						<Calendar className="w-3 h-3" />
 						<span>Week of {formatDate(progressUpdate.weekOf)}</span>
 						<Button
@@ -166,12 +162,22 @@ export function ProgressUpdateNotes({
 							</>
 						) : (
 							<>
-								<AnimatedMarkdownBox
-									content={progressUpdate.content || "No update content yet."}
-									placeholder="No update content yet."
-									onEdit={() => setIsEditing(true)}
-									showEditButton={true}
-								/>
+								{isGenerating ? (
+									<div className="space-y-3 animate-pulse">
+										<div className="h-4 bg-gray-200 rounded w-3/4"></div>
+										<div className="h-4 bg-gray-200 rounded w-1/2"></div>
+										<div className="h-4 bg-gray-200 rounded w-5/6"></div>
+										<div className="h-4 bg-gray-200 rounded w-2/3"></div>
+										<div className="h-4 bg-gray-200 rounded w-4/5"></div>
+									</div>
+								) : (
+									<AnimatedMarkdownBox
+										content={progressUpdate.content || "No update content yet."}
+										placeholder="No update content yet."
+										onEdit={() => setIsEditing(true)}
+										showEditButton={true}
+									/>
+								)}
 								<div className="flex gap-2 items-center">
 									{/*<Button
 										onClick={generateInitialContent}
